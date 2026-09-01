@@ -1,0 +1,50 @@
+{
+  "name": "ai-signal",
+  "version": "1.0.0",
+  "owner": "Tokenaissance",
+  "updated_at": "2026-09-01",
+  "status": "active",
+  "maturity_tier": "library",
+  "lifecycle_stage": "maintained",
+  "context_budget_tier": "production",
+  "review_cadence": "quarterly",
+  "readme_languages": [
+    "zh-CN"
+  ],
+  "upstream_inspiration": "https://github.com/Benboerba620/ai-signal",
+  "upstream_sync": {
+    "policy": "maintained fork of Benboerba620/ai-signal; align package metadata, keep runtime and feed updates in sync"
+  },
+  "defaults": {
+    "skill_name_prefix": "ai-signal",
+    "max_preferred_hyphen_parts": 2,
+    "copyright": "Copyright (c) 2026 Tokenaissance",
+    "attribution": "Original by Benboerba620 (公众号「奔波儿r」)"
+  },
+  "target_platforms": [
+    "fastagent",
+    "openai",
+    "claude",
+    "generic",
+    "agent-skills-compatible",
+    "vscode"
+  ],
+  "factory_components": [
+    "references",
+    "scripts",
+    "prompts",
+    "config",
+    "tests"
+  ],
+  "release_gates": [
+    "validate_skill",
+    "trigger_eval",
+    "skill_ir_export",
+    "release_check",
+    "unit_tests",
+    "secret_scan",
+    "install_readme_verification",
+    "feature_branch_publish",
+    "public_claim_guard"
+  ]
+}

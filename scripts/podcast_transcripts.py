@@ -1,5 +1,7 @@
 """Store podcast transcripts as per-episode sidecars instead of inline feed data."""
 
+SCRIPT_INTERFACE = "internal-module"
+
 import hashlib
 import json
 from datetime import datetime, timedelta, timezone
