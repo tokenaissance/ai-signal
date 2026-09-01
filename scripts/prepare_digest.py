@@ -354,6 +354,36 @@ def candidate_bases():
     return bases
 
 
+def safe_repo_relative_path(path_text):
+    """Resolve a repo-relative path confined to this checkout, or None.
+
+    `summary_path` / `transcript_path` values arrive inside remote feeds, so
+    they must never be able to address files outside ROOT_DIR. Absolute paths,
+    parent traversal, dot segments, backslashes, drive letters, and URL
+    schemes are all rejected.
+    """
+    if not isinstance(path_text, str):
+        return None
+    candidate = path_text.strip()
+    if (
+        not candidate
+        or candidate.startswith(("/", "\\"))
+        or re.match(r"^[A-Za-z]:[\\/]", candidate)
+        or "://" in candidate
+        or "\\" in candidate
+    ):
+        return None
+    segments = candidate.split("/")
+    if not segments or any(segment in ("..", ".") for segment in segments):
+        return None
+    resolved = (ROOT_DIR / candidate).resolve()
+    try:
+        resolved.relative_to(ROOT_DIR.resolve())
+    except ValueError:
+        return None
+    return resolved
+
+
 def fetch_json_any(path):
     """Fetch a repo-relative JSON file, trying each mirror base in order."""
     global _preferred_base
@@ -367,8 +397,13 @@ def fetch_json_any(path):
 
 
 def fetch_text_any(path):
-    """Fetch a repo-relative text file, trying each mirror base in order."""
+    """Fetch a repo-relative text file, trying each mirror base in order.
+
+    Paths that would escape this checkout are rejected before any network call.
+    """
     global _preferred_base
+    if safe_repo_relative_path(path) is None:
+        return None
     for base in candidate_bases():
         text = fetch_text(f"{base}/{path}")
         if text is not None:
@@ -388,8 +423,8 @@ def load_local_json(filename):
 
 
 def load_local_text(path_text):
-    path = ROOT_DIR / path_text
-    if not path.exists():
+    path = safe_repo_relative_path(path_text)
+    if path is None or not path.exists():
         return None
     try:
         return clean_text(path.read_text("utf-8", errors="replace"))
