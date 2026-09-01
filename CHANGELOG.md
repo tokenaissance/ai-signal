@@ -2,6 +2,13 @@
 
 记录 AI Signal 面向用户的变更。每日的 feed 数据更新（`Feed update` commit）不在此列。
 
+## 2026-09-01
+
+### 修复
+
+- 修复 `summary_path` / `transcript_path` 任意本地文件读取漏洞：这两个字段来自远程 feed，此前 `load_local_text()` 会把它直接拼到仓库根目录读取，恶意或被攻陷的 feed（或 `AI_SIGNAL_BASE_URLS` 覆盖）可读取仓库外任意本地文件并写入 payload。现在新增 `safe_repo_relative_path()` 守卫：绝对路径、`..`/`.` 段、反斜杠、盘符与 URL scheme 一律拒绝，且解析后的路径必须落在仓库目录内；远程拉取与本地读取两个入口都加了校验，`fetch_transcript.py` 的文稿读取同样被覆盖。新增 13 个回归测试。
+  之所以这样改：安全审计（Gen / Socket / Snyk）对中心 feed 驱动的路径处理给出中高危提示，这是用户侧脚本唯一一处远程内容直接决定本地文件读写的入口。
+
 ## 2026-08-25
 
 ### 修复
