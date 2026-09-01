@@ -3,7 +3,7 @@
   "generated_at": "2026-09-01",
   "package": {
     "name": "ai-signal",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "owner": "Tokenaissance",
     "maturity_tier": "library",
     "lifecycle_stage": "maintained",
@@ -13,8 +13,8 @@
     }
   },
   "intent": {
-    "description": "AI Signal daily digest for Agent users — tracks top AI builders on X, podcasts, official AI-lab blogs (Anthropic / OpenAI / DeepMind), and arXiv papers, then remixes central JSON feeds into a personalized digest. Use when the user wants AI/investing insights or invokes /ai-signal. No content API keys required.",
-    "job_to_be_done": "AI Signal daily digest for Agent users — tracks top AI builders on X, podcasts, official AI-lab blogs (Anthropic / OpenAI / DeepMind), and arXiv papers, then remixes central JSON feeds into a personalized digest. Use when the user wants AI/investing insights or invokes /ai-signal. No content API keys required.",
+    "description": "AI Signal daily digest for Agent users — tracks top AI builders on X, podcasts, official AI-lab blogs (Anthropic / OpenAI / DeepMind), and arXiv papers, then remixes central JSON feeds into a personalized digest. Use when the user wants AI/investing insights, asks to install ai-signal (FastAgent or generic agents), or invokes /ai-signal. No content API keys required.",
+    "job_to_be_done": "AI Signal daily digest for Agent users — tracks top AI builders on X, podcasts, official AI-lab blogs (Anthropic / OpenAI / DeepMind), and arXiv papers, then remixes central JSON feeds into a personalized digest. Use when the user wants AI/investing insights, asks to install ai-signal (FastAgent or generic agents), or invokes /ai-signal. No content API keys required.",
     "target_users": [
       "fastagent operator"
     ],
@@ -30,6 +30,7 @@
   },
   "triggers": {
     "should_trigger": [
+      "把 ai-signal 安装到 fastagent 里",
       "帮我安装 ai-signal 并生成今天的日报",
       "生成今天的 AI 信号日报",
       "展开第 2 个播客",
@@ -92,6 +93,7 @@
     "reports": [
       "reports/creation-handoff.md",
       "reports/prior-art-research.md",
+      "reports/skill-ir.json",
       "reports/trigger-eval.json"
     ]
   },

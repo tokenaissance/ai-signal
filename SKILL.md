@@ -1,6 +1,12 @@
 ---
 name: ai-signal
-description: AI Signal daily digest for Agent users — tracks top AI builders on X, podcasts, official AI-lab blogs (Anthropic / OpenAI / DeepMind), and arXiv papers, then remixes central JSON feeds into a personalized digest. Use when the user wants AI/investing insights or invokes /ai-signal. No content API keys required.
+description: AI Signal daily digest for Agent users — tracks top AI builders on X, podcasts, official AI-lab blogs (Anthropic / OpenAI / DeepMind), and arXiv papers, then remixes central JSON feeds into a personalized digest. Use when the user wants AI/investing insights, asks to install ai-signal (FastAgent or generic agents), or invokes /ai-signal. No content API keys required.
+homepage: https://github.com/tokenaissance/ai-signal
+metadata:
+  fastagent:
+    emoji: "📡"
+    requires:
+      anyBins: ["python3", "python"]
 ---
 # AI Signal — 追踪 AI 一线的声音
 
@@ -29,6 +35,24 @@ config explicitly sets `include_central_summaries: true`.
 
 Before any workflow, locate a complete AI Signal checkout. A complete checkout
 contains both `scripts/prepare_digest.py` and `references/` next to this file.
+Under FastAgent the loader substitutes `{baseDir}` for this directory at load
+time; on generic hosts the same location is `SKILL_DIR`.
+
+FastAgent (primary target): the loader does NOT scan `~/.agents/skills/` — the
+`npx skills add` default location is invisible to it. Install the full repo to
+the user layer so every agent discovers it (`fastagent skill list` then shows
+source=user):
+
+```bash
+git clone --depth 1 https://github.com/tokenaissance/ai-signal.git ~/.fastagent/skills/ai-signal
+```
+
+Generic hosts: the skills.sh package installer installs the full repo under
+`~/.agents/skills/ai-signal/`:
+
+```bash
+npx skills add tokenaissance/ai-signal
+```
 
 If those support files are present, use this skill directory directly. Some
 single-file installers copy only `SKILL.md`; in that case, install the runtime
@@ -36,7 +60,7 @@ checkout automatically:
 
 ```bash
 mkdir -p ~/.ai-signal/runtime
-git clone --depth 1 https://github.com/Benboerba620/ai-signal.git ~/.ai-signal/runtime/ai-signal
+git clone --depth 1 https://github.com/tokenaissance/ai-signal.git ~/.ai-signal/runtime/ai-signal
 python -m pip install -r ~/.ai-signal/runtime/ai-signal/requirements.txt
 ```
 

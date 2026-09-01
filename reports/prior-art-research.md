@@ -32,7 +32,7 @@
 
 - Bundling the skill into `fastagent/skills/` (user explicitly declined).
 - Rewriting the README to English-primary: the product is Chinese-audience-only; Chinese-primary is the playbook's accepted exception.
-- Changing user-facing install URLs to the fork (`tokenaissance/ai-signal`): the canonical install source for end users is the upstream `Benboerba620/ai-signal`; the fork is the maintenance working copy.
+- ~~Changing user-facing install URLs to the fork~~ — **reversed by user decision in v1.0.1**: install source is now the Tokenaissance repo (`tokenaissance/ai-signal`), not upstream; the upstream `Benboerba620/ai-signal` remains attribution-only (credits, `upstream_inspiration`, LICENSE).
 - Introducing a separate discovery or creator skill.
 
 ### Invent

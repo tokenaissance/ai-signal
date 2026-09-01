@@ -3,7 +3,7 @@ interface:
   short_description: "为 Agent 用户追踪 AI 一线信号（X / 播客 / 官方博客 / arXiv 论文），Agent 读取中央 JSON feed 按用户偏好生成个性化日报，可推送到 Telegram / 飞书 / 邮件或聊天窗口"
   default_prompt: "Use $ai-signal as the Agent-side AI daily digest curator. First confirm the user wants AI/investing signal tracking or a digest (or invoked /ai-signal). Locate a complete AI Signal checkout (scripts/prepare_digest.py plus references/ next to SKILL.md); if only SKILL.md is present, install the runtime checkout into ~/.ai-signal/runtime automatically. Read the central JSON feeds (feeds/feed-x.json, feed-podcasts.json, feed-blogs.json, feed-arxiv.json) which are fetched centrally daily — no content API keys needed. Generate the personalized digest by following the user's stored preferences in ~/.ai-signal/ and the prompt templates in ~/.ai-signal/prompts/ (or this repo's prompts/). Default is JSON-first: do not depend on central Chinese summaries unless the user's config sets include_central_summaries: true. Deliver into the current chat or via Telegram / Feishu / email when the user asks. On explicit requests, expand a podcast by guid (transcripts are cached 14 days); record user feedback locally in ~/.ai-signal/feedback.jsonl and use the last 90 days as soft ranking preference; never upload feedback to the central service. Respect delivery, language, and verbosity preferences from config, and offer manual /ai-signal invocation for non-persistent agents."
   examples:
-    - "帮我安装 https://github.com/Benboerba620/ai-signal"
+    - "帮我安装 https://github.com/tokenaissance/ai-signal"
     - "生成今天的 AI 日报"
     - "展开第 2 个播客"
     - "把今天的信号推送到 Telegram"
