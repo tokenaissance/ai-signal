@@ -82,6 +82,10 @@
   ],
   "should_trigger": [
     {
+      "text": "把 ai-signal 安装到 fastagent 里",
+      "family": "cn_fastagent_install"
+    },
+    {
       "text": "帮我安装 ai-signal 并生成今天的日报",
       "family": "cn_install_and_digest"
     },

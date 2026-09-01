@@ -2,9 +2,9 @@
 
 > 追踪 AI 一线的声音——做事的人、写代码的人、下注的人，不是二手转述。每天自动抓取 AI 播客、推文和论文，让你的 Agent 生成个性化日报。
 
-[![Release](https://img.shields.io/github/v/release/Benboerba620/ai-signal)](https://github.com/Benboerba620/ai-signal/releases)
-[![Stars](https://img.shields.io/github/stars/Benboerba620/ai-signal)](https://github.com/Benboerba620/ai-signal)
-[![Last commit](https://img.shields.io/github/last-commit/Benboerba620/ai-signal)](https://github.com/Benboerba620/ai-signal)
+[![Release](https://img.shields.io/github/v/release/tokenaissance/ai-signal)](https://github.com/tokenaissance/ai-signal/releases)
+[![Stars](https://img.shields.io/github/stars/tokenaissance/ai-signal)](https://github.com/tokenaissance/ai-signal)
+[![Last commit](https://img.shields.io/github/last-commit/tokenaissance/ai-signal)](https://github.com/tokenaissance/ai-signal)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **这份清单本身就是产品。** 如果这个项目对你有帮助，欢迎点一下 Star，让更多需要 AI 一线信号的人看到它。
@@ -29,7 +29,7 @@ AI Signal 把「每天盯着 AI 一线」这件事交给中央服务 + 你自己
 ## 你可以直接这样说 / Natural-language examples
 
 ```text
-帮我安装 https://github.com/Benboerba620/ai-signal
+帮我安装 https://github.com/tokenaissance/ai-signal
 生成今天的 AI 日报
 展开第 2 个播客
 把今天的信号推送到 Telegram
@@ -75,7 +75,7 @@ flowchart LR
 
 打开你的 AI Agent（OpenClaw / Claude Code / Cursor / WorkBuddy / Codex 等均可），说一句话：
 
-> **帮我安装 https://github.com/Benboerba620/ai-signal**
+> **帮我安装 https://github.com/tokenaissance/ai-signal**
 
 AI 会自动完成安装，然后引导你设置推送频率和时间、语言、详细程度和输出方式。设置完**立刻生成第一份日报**。
 
@@ -87,16 +87,16 @@ AI 会自动完成安装，然后引导你设置推送频率和时间、语言�
 npx skills add tokenaissance/ai-signal
 
 # 方式二：git clone（OpenClaw / Claude Code / 其他）
-git clone https://github.com/Benboerba620/ai-signal.git ~/skills/ai-signal
+git clone https://github.com/tokenaissance/ai-signal.git ~/skills/ai-signal
 cd ~/skills/ai-signal/scripts && pip install -r ../requirements.txt
 ```
 
 **国内网络 clone 失败？** 用镜像加速前缀（示例，失效就换一个同类服务）：
 
 ```bash
-git clone https://gh-proxy.com/https://github.com/Benboerba620/ai-signal.git
+git clone https://gh-proxy.com/https://github.com/tokenaissance/ai-signal.git
 # 或
-git clone https://ghfast.top/https://github.com/Benboerba620/ai-signal.git
+git clone https://ghfast.top/https://github.com/tokenaissance/ai-signal.git
 ```
 
 安装后的每日 feed 更新不依赖代理：GitHub 直连失败时自动切换 jsDelivr CDN 镜像。
@@ -228,6 +228,7 @@ python3 scripts/generate_feed.py
 
 ## 最近更新 / Recent updates
 
+- `2026-09-01`：适配 FastAgent——安装源改为 tokenaissance/ai-signal（非上游），SKILL.md 按 fastagent-skill-guide 加 `metadata.fastagent`，FastAgent 装到 user 层 `~/.fastagent/skills/ai-signal`（loader 不扫 `~/.agents/skills/`）
 - `2026-08-25`：兼容 X 登录页 16 位脚本哈希，修复 19 个账号被解析为空
 - `2026-08-21`：SemiAnalysis 自动匹配官方 YouTube 字幕；Latent Space 与 Lenny 切换 podcast-only RSS
 - `2026-08-19`：新增 Ben Thompson（Stratechery）四通道
@@ -257,7 +258,7 @@ python3 scripts/generate_feed.py
 
 ## 致谢 / Credits and sources
 
-- 原始作者：**奔波儿r**（[Benboerba620](https://github.com/Benboerba620)）——这份清单来自一位二级市场研究员的日常信息源
+- 原始作者：**奔波儿r**（[Benboerba620](https://github.com/Benboerba620/ai-signal)）——这份清单来自一位二级市场研究员的日常信息源
 - 信息源：见 [信息源](#信息源--information-sources) 一节，全部为公开内容
 - 包规范：按 [fastagent-meta-skill](https://github.com/tokenaissance/fastagent-meta-skill) 的发布流程重新封装
 

@@ -2,10 +2,10 @@
 
 ## Result
 
-- Skill: `ai-signal` 1.0.0
-- Job: re-package (重新封装) the existing ai-signal Agent content-curator skill into a fastagent-meta-skill conformant package
-- Status: package scaffold added (`agents/interface.yaml`, `manifest.json`, `evals/trigger_cases.json`, `LICENSE`), README rewritten to the template, trigger eval passing 21/21, unit tests 72 pass / 1 skip, release check clean
-- Runtime behavior unchanged; this commit is package-only
+- Skill: `ai-signal` 1.0.1
+- Job: re-package (重新封装) ai-signal into a fastagent-meta-skill conformant package, then adapt it as a FastAgent skill per `fastagent-meta-skill` v2.10.0 + the FastAgent Runtime Skill Guide
+- Status: v1.0.1 adds FastAgent adaptation — install source switched to the Tokenaissance repo (`tokenaissance/ai-signal`, not upstream), SKILL.md now fastagent-primary with `metadata.fastagent` (emoji + `requires.anyBins python3/python`) and `{baseDir}`-aware runtime bootstrap, new `cn_fastagent_install` trigger case, README documents the `~/.fastagent/skills/ai-signal` user-layer install path; trigger eval and release check clean
+- v1.0.0 (prior): package scaffold (`agents/interface.yaml`, `manifest.json`, `evals/trigger_cases.json`, `LICENSE`), README rewritten to template, trigger eval 21/21, unit tests 72 pass / 1 skip; runtime behavior unchanged, package-only
 
 ## Reference skills studied
 
