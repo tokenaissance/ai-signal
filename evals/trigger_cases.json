@@ -1,0 +1,173 @@
+{
+  "recommended_threshold": 0.34,
+  "description_required_concepts": [
+    "ai_signal",
+    "source",
+    "agent_digest"
+  ],
+  "positive_concepts": {
+    "ai_signal": [
+      "ai signal",
+      "ai-signal",
+      "signal",
+      "信号",
+      "daily digest",
+      "digest"
+    ],
+    "source": [
+      "podcast",
+      "播客",
+      "twitter",
+      "x",
+      "arxiv",
+      "论文",
+      "paper",
+      "blog",
+      "博客",
+      "feed",
+      "json feed",
+      "信息源",
+      "推文",
+      "newsletter"
+    ],
+    "agent_digest": [
+      "agent",
+      "digest",
+      "日报",
+      "摘要",
+      "总结",
+      "summarize",
+      "personalized",
+      "个性化",
+      "生成",
+      "推送",
+      "deliver",
+      "定制"
+    ],
+    "track_action": [
+      "track",
+      "tracks",
+      "追踪",
+      "跟踪",
+      "install",
+      "安装",
+      "setup",
+      "展开",
+      "expand",
+      "订阅",
+      "follow",
+      "push",
+      "切换"
+    ]
+  },
+  "negative_patterns": [
+    "不要生成日报",
+    "不要做成日报",
+    "不要生成",
+    "不用总结",
+    "别生成",
+    "翻译一下",
+    "只翻译",
+    "translate only",
+    "just explain",
+    "只解释",
+    "解释一下",
+    "brainstorm",
+    "写个标题",
+    "产品标题",
+    "one off",
+    "一次性总结",
+    "普通文档",
+    "普通 Python 包"
+  ],
+  "should_trigger": [
+    {
+      "text": "帮我安装 ai-signal 并生成今天的日报",
+      "family": "cn_install_and_digest"
+    },
+    {
+      "text": "生成今天的 AI 信号日报",
+      "family": "cn_daily_digest"
+    },
+    {
+      "text": "展开第 2 个播客",
+      "family": "cn_expand_podcast"
+    },
+    {
+      "text": "把今天的信息源推送到 Telegram",
+      "family": "cn_deliver"
+    },
+    {
+      "text": "总结今天的 arXiv 论文",
+      "family": "cn_papers_digest"
+    },
+    {
+      "text": "AI 信号今天有什么新论文",
+      "family": "cn_signal_papers"
+    },
+    {
+      "text": "Generate today's AI digest",
+      "family": "en_daily_digest"
+    },
+    {
+      "text": "Expand podcast P2 transcript",
+      "family": "en_expand_podcast"
+    },
+    {
+      "text": "Push today's signal to Telegram",
+      "family": "en_deliver"
+    },
+    {
+      "text": "把日报切换成英文",
+      "family": "cn_language_pref"
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "text": "把这篇文章翻译一下",
+      "family": "translate_only"
+    },
+    {
+      "text": "帮我写个产品标题",
+      "family": "copywriting_only"
+    },
+    {
+      "text": "解释一下什么是 AI 信号",
+      "family": "explain_only"
+    },
+    {
+      "text": "Summarize this random note in three bullets",
+      "family": "summary_only"
+    },
+    {
+      "text": "本周投资周报帮我总结一下",
+      "family": "generic_summary"
+    },
+    {
+      "text": "brainstorm 几个产品点子",
+      "family": "brainstorm_only"
+    },
+    {
+      "text": "把这个 Python 脚本打包发布到 PyPI",
+      "family": "non_skill_package"
+    }
+  ],
+  "near_neighbor": [
+    {
+      "text": "只展开播客字幕，不要生成日报",
+      "family": "expand_only_no_digest"
+    },
+    {
+      "text": "阅读一篇博客文章，不要做成日报",
+      "family": "read_only_no_digest"
+    },
+    {
+      "text": "只把这个播客的新闻稿转给我，不用总结",
+      "family": "forward_only_no_summary"
+    },
+    {
+      "text": "把这期播客的标题列出来就行，不要生成日报",
+      "family": "list_only_no_digest"
+    }
+  ]
+}

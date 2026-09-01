@@ -54,8 +54,8 @@ python scripts/generate_summaries.py --profile zh_standard --limit 1
 On PowerShell:
 
 ```powershell
-$env:DEEPSEEK_API_KEY = "your_deepseek_key_here"
-$env:ARK_API_KEY = "your_ark_key_here"
+$env:DEEPSEEK_API_KEY = <your_deepseek_key_here>
+$env:ARK_API_KEY = <your_ark_key_here>
 python scripts/generate_summaries.py --profile zh_standard --limit 1
 ```
 

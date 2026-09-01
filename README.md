@@ -1,67 +1,117 @@
 # AI Signal
 
-追踪 AI 一线的声音——做事的人、写代码的人、下注的人，不是二手转述。
+> 追踪 AI 一线的声音——做事的人、写代码的人、下注的人，不是二手转述。每天自动抓取 AI 播客、推文和论文，让你的 Agent 生成个性化日报。
 
-这是一份给 AI Agent 用户的精心筛选信息源。中央每天自动抓取播客、推文和论文；你的 Agent 读取 JSON，按你的口味生成日报。
+[![Release](https://img.shields.io/github/v/release/Benboerba620/ai-signal)](https://github.com/Benboerba620/ai-signal/releases)
+[![Stars](https://img.shields.io/github/stars/Benboerba620/ai-signal)](https://github.com/Benboerba620/ai-signal)
+[![Last commit](https://img.shields.io/github/last-commit/Benboerba620/ai-signal)](https://github.com/Benboerba620/ai-signal)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**这份清单本身就是产品。**
+**这份清单本身就是产品。** 如果这个项目对你有帮助，欢迎点一下 Star，让更多需要 AI 一线信号的人看到它。
 
-如果这个项目对你有帮助，欢迎在 GitHub 点一下 Star，让更多需要 AI 一线信号的人看到它。
+## 为什么值得用 / Why I built this
 
-## 最近更新
+关心 AI 的人最大的成本是**筛选**。X 上噪音多、播客太长、arXiv 每天几百篇论文、官方博客又不及时——每天手动刷一遍，时间就没了。
 
-- `2026-08-21`：SemiAnalysis 改为日常自动匹配官方 YouTube 字幕；Latent Space 与 Lenny 切换到 podcast-only RSS，避免把 newsletter 文章封面误当音频；维护者可在 Mac 上用共享 Whisper 引擎补齐无公开字幕的节目
-- `2026-08-19`：新增 Ben Thompson（Stratechery）四通道——X [@benthompson](https://x.com/benthompson)、Sharp Tech 播客、人物访谈搜索、Stratechery 博客 RSS；付费墙后的内容只呈现标题导语和链接，不替他展开论点
-- `2026-08-18`：接入 Y Combinator Startup Podcast 当前 RSS，替换已停在 2025 年的旧 Lightcone feed，恢复 YC 最新播客抓取
-- `2026-08-05`：X 主题过滤按账号性质分档——分析师/决策者不再要求命中技术关键词（实测此前丢掉 @jimkxa 100%、@GavinSBaker 67% 的原创内容），引用推文连同被引用原推一起抓取和展示
-- `2026-08-05`：X 信源换血——移除 NVIDIA 官方账号，改追黄仁勋本人 [@JensenHuang](https://x.com/JensenHuang)（7/24 开通）；新增买方视角 [@GavinSBaker](https://x.com/GavinSBaker)（Atreides Management）
-- `2026-07-08`：新增 Naval Ravikant——加入 X 人物追踪、YouTube 人物访谈搜索和 Naval RSS 播客频道；Naval 频道单独使用 14 天窗口，避免错过低频长节目
-- `2026-07-08`：人物追踪剔除"被谈论但本人没出场"的视频——标题语法守卫识别 "记者 on 某人"/"the truth about 某人" 这类评论内容，只收本人真实出场的访谈
-- `2026-07-08`：定时任务默认限时拉到 15 分钟，避免网络或模型较慢时任务被中途杀掉后反复重启；OpenClaw cron 模板加 `--timeout-seconds 900`，其他平台要求任务限时 ≥10 分钟，另加故障排查一节
-- `2026-07-07`：修复论文抓不到最新——arXiv 的 `submittedDate` 排序索引滞后（已知问题）导致"最新论文"卡在 3-4 天前，叠加时间窗把结果筛空、静默喂旧数据。改用 `lastUpdatedDate` 实时排序 + 72h 窗口，恢复抓当天最新论文
-- `2026-07-06`：新增官方博客追踪——Anthropic / OpenAI / Google DeepMind 的模型发布、产品上线、研究成果直接进日报（编号 B1/B2，可展开）
-- `2026-07-06`：大陆直连加固——feed 镜像从 2 个扩到 5 个 CDN 入口，被阻断的源 5 秒快速跳过（回应用户反馈"没 VPN 拉不到数据"）
-- `2026-07-05`：新增人物追踪——28 位 AI 高管/分析师/创始人上任何播客都会被抓到（不再限于订阅频道），只收本周上传的最新访谈
-- `2026-07-05`：修正 3 个 X 账号 handle（Dylan Patel / Leopold Aschenbrenner / Jim Keller 此前配错，一直抓不到推文）
-- `2026-07-05`：feed 拉取加多源镜像——GitHub 不可达时自动切 jsDelivr CDN
-- `2026-07-05`：推文加主题过滤，节日祝福 / 生活动态等噪音不再进 feed
-- `2026-07-04`：安装瘦身——用户侧只需 `httpx[socks]`；修复 SOCKS 代理下拉取失败与 Python 3.9 装不上
+AI Signal 把「每天盯着 AI 一线」这件事交给中央服务 + 你自己的 Agent：中央只负责把原料抓好（公开内容，不需要任何内容 API key），你的 Agent 按你的口味筛选、翻译、总结、推送。**筛选标准只有一个：这个人说的话，值不值得我每天花时间看。**
 
-完整历史见 [CHANGELOG](CHANGELOG.md)。
+## 能力对比 / 比"自己刷"强在哪
 
----
+| 场景 | 自己刷 X + 看 arXiv | 订阅通用邮件简报 | AI Signal |
+|------|--------------------|------------------|-----------|
+| 播客 | 不知道哪期值得听 | 不覆盖 | 15 个一线频道 + 29 人全网追踪，日报给简介、可展开全文 |
+| X / Twitter | 噪音淹没判断 | 不覆盖 | 精选 19 个账号，按"分析师/决策者/建造者"分档过滤 |
+| 官方博客 | 忘了盯 | 二手转述 | Anthropic / OpenAI / DeepMind 第一时间直达 |
+| arXiv | 翻不完 | 不过滤 | 每日最多 30 篇，AI 相关分类 |
+| 定制 | — | 固定模板 | 语言 / 详细程度 / 领域 / 推送渠道全可对话改 |
+| 内容 API key | 需要 | 需要 | **不需要**（中央统一抓取） |
 
-## 你会得到什么
+## 你可以直接这样说 / Natural-language examples
+
+```text
+帮我安装 https://github.com/Benboerba620/ai-signal
+生成今天的 AI 日报
+展开第 2 个播客
+把今天的信号推送到 Telegram
+只看 AI 的，不要投资
+切回英文，详细一点
+P2 有用，X1 是噪音
+展开 Vercel agents 这期，按核心观点、论证链、关键引用展开
+```
+
+## 它会做什么 / What it produces
 
 由你的 AI Agent 读取中央 JSON 后生成一份日报（可直接在聊天里看；如果你的 Agent 支持定时任务，也可以每天自动推送），包含：
 
-- 一线播客的最新内容（日报先给简介；你说“展开 P2”后再按需读取该期全文字幕）
+- 一线播客的最新内容（日报先给简介；你说"展开 P2"后再按需读取该期全文字幕）
 - 精选推特账号的当日观点
 - Anthropic / OpenAI / Google DeepMind 官方博客的最新发布（新模型、产品、研究、安全框架）
 - arXiv 最新 AI/ML/NLP 论文标题、链接和摘要原文
 - 每条播客、推文和论文都显示来源发布时间，并按你的时区转换；无法验证的时间会明确标记
 - 按你的偏好定制：中文 / 英文 / 双语，精华 / 标准 / 完整
-- 不需要内容 API key——所有内容由中央服务统一抓取
 
 > AI Signal 是 **Agent-first** 架构：中央只供料，不替每个用户生成最终日报。真正的总结、翻译、格式定制，都由用户自己的 Agent 完成。
 
-## 日报不是终点
+日报只是第一层筛选。看完以后你可以继续让 Agent 展开任意一条内容，尤其是长播客（有全文字幕的会标记为可展开）。字幕从最后一次出现在最近更新 feed 起保留 14 天。
 
-日报只是第一层筛选。看完以后你可以继续让 Agent 展开任意一条内容，尤其是长播客：
+## 完整工作流 / One complete workflow
 
-- “展开第 2 个播客”
-- “把 Vercel agents 这期做一个 breakdown”
-- “这期播客按核心观点、论证链、关键引用、投资含义展开”
+```mermaid
+flowchart LR
+  A["一线信息源<br/>X / 播客 / arXiv"] --> B["中央 GitHub Actions<br/>每天自动抓取"]
+  B --> C["公开 JSON feeds<br/>feed-x / feed-podcasts / feed-arxiv"]
+  C --> D["你的 AI Agent<br/>读取 JSON + 你的偏好"]
+  D --> E["生成个性化日报<br/>中文/英文、长/短、可继续追问"]
+  E --> F["聊天窗口 / Telegram / 飞书 / 邮件"]
+```
 
-如果该播客有全文字幕，日报会标记为可展开；只有你明确要求“展开 P2”后，Agent 才会按 `guid` 拉取这一期全文，而不是每天预先下载所有字幕。
+1. 中央每天自动抓取播客、推文、官方博客和 arXiv 论文，生成公开 JSON feed（北京时间 06:00 全量，工作日约 09:30 补一次 arXiv）。
+2. 你的 Agent 读取这些 JSON feed 和你的本地偏好（语言、详细程度、领域、推送渠道）。
+3. Agent 按提示词模板生成日报，优先给简介，播客按需展开全文。
+4. 日报进入聊天窗口，或按设定推送到 Telegram / 飞书 / 邮件。
+5. 你对日报的反馈（"P2 有用""X1 是噪音"）存在本地，作为未来 90 天的软排序偏好。
 
-字幕从最后一次出现在最近更新 feed 起保留 14 天。播客退出主 feed 后，仍可通过字幕索引展开；超过 14 天后全文缓存自动过期，只保留日报中的标题、链接和已有摘要。
+## 安装 / Installation
 
-SemiAnalysis 已进入日常自动全文流程：系统优先匹配官方 YouTube 同期视频的公开字幕，匹配不到时才尝试 ASR。仓库维护者仍可在 GitHub Actions 的 `Generate Daily Feed` 手动运行页把 `transcribe_semianalysis` 设为 `true`，单独重试最新 1 期。
+打开你的 AI Agent（OpenClaw / Claude Code / Cursor / WorkBuddy / Codex 等均可），说一句话：
 
-没有公开字幕时，维护者也可以在 macOS 上运行 `python3 scripts/transcribe_missing_podcasts.py --backend local --only-channel a16z --force-channel a16z --limit 1`，调用本地 Whisper 逐集转录。该模式默认寻找上级工作区中的共享 `workspace/scripts/podcast_rss_transcribe.py`；其他目录结构可用 `AI_SIGNAL_LOCAL_TRANSCRIBER` 指定脚本路径。音频只保存在临时目录，单集完成后自动删除。
+> **帮我安装 https://github.com/Benboerba620/ai-signal**
 
-## 信息源
+AI 会自动完成安装，然后引导你设置推送频率和时间、语言、详细程度和输出方式。设置完**立刻生成第一份日报**。
+
+<details>
+<summary>手动安装（如果你的 Agent 不支持自动安装）</summary>
+
+```bash
+# 方式一：npx skills 安装器（最干净）
+npx skills add Benboerba620/ai-signal --skill ai-signal
+
+# 方式二：git clone（OpenClaw / Claude Code / 其他）
+git clone https://github.com/Benboerba620/ai-signal.git ~/skills/ai-signal
+cd ~/skills/ai-signal/scripts && pip install -r ../requirements.txt
+```
+
+**国内网络 clone 失败？** 用镜像加速前缀（示例，失效就换一个同类服务）：
+
+```bash
+git clone https://gh-proxy.com/https://github.com/Benboerba620/ai-signal.git
+# 或
+git clone https://ghfast.top/https://github.com/Benboerba620/ai-signal.git
+```
+
+安装后的每日 feed 更新不依赖代理：GitHub 直连失败时自动切换 jsDelivr CDN 镜像。
+
+</details>
+
+## 前置条件 / Prerequisites
+
+- [ ] 一个能运行 skill 的 AI Agent（OpenClaw、Claude Code、Cursor、WorkBuddy、Codex 等）
+- [ ] 网络连接（拉取中央 feed；不需要 VPN——GitHub 不可达时自动走 jsDelivr CDN 镜像）
+- [ ] 用户侧 Python 依赖：`pip install -r requirements.txt`（只需 `httpx[socks]` 与 `tzdata`）
+
+就这些。**不需要内容 API key。** 若要无人值守地每天自动收到，需要使用支持定时任务的 Agent；普通非持久 Agent 更适合手动输入 `/ai-signal` 查看。
+
+## 信息源 / Information sources
 
 ### 播客（15 个频道）
 
@@ -91,7 +141,7 @@ SemiAnalysis 已进入日常自动全文流程：系统优先匹配官方 YouTub
 
 **中国 AI**：闫俊杰（MiniMax）、杨植麟（月之暗面）、梁文锋（DeepSeek）、唐杰（智谱）、罗福莉、李广密（拾象）、肖弘（Manus）
 
-> 过滤规则：只收本周上传（YouTube 服务端过滤）、标题必须含人名（去同名假阳性）、时长 ≥ 15 分钟（去切片/shorts）、频道订阅数 ≥ 5 万（去小搬运号）、海外人物剔除非拉丁文字频道名/标题（去大号外语搬运/二创，如中文配音、印地语二创、韩语搬运）、海外人物要求视频有英文字幕轨（挡住英文标题的外语综艺，如韩综 You Quiz 上的 Jensen Huang 只有韩语字幕；只要英文原版）、剔除例行盘面播报和影视剧合集噪音；与频道订阅命中的同一期节目自动去重；每天最多新收 5 条，日报不会被人物命中刷屏。名单在 `config/sources.json` 的 `podcasts.people`。
+> 过滤规则：只收本周上传（YouTube 服务端过滤）、标题必须含人名（去同名假阳性）、时长 ≥ 15 分钟（去切片/shorts）、频道订阅数 ≥ 5 万（去小搬运号）、海外人物剔除非拉丁文字频道名/标题（去大号外语搬运/二创）、海外人物要求视频有英文字幕轨；剔除例行盘面播报和影视剧合集噪音；与频道订阅命中的同一期节目自动去重；每天最多新收 5 条。名单在 `config/sources.json` 的 `podcasts.people`。
 
 ### Twitter/X（19 个账号）
 
@@ -102,23 +152,19 @@ SemiAnalysis 已进入日常自动全文流程：系统优先匹配官方 YouTub
 **建造者**：[@AmandaAskell](https://x.com/AmandaAskell)、[@bcherny](https://x.com/bcherny)（Claude Code）、[@_catwu](https://x.com/_catwu)、[@alexalbert__](https://x.com/alexalbert__)、[@rauchg](https://x.com/rauchg)（Vercel）、[@joshwoodward](https://x.com/joshwoodward)（Google Labs）
 
 > 选人标准：在一线做事 / 有独立判断 / 用真金白银下注。不选搬运号、评论员、流量账号。
-
 > 内容门槛：默认剔除回复，并要求互动分数达到 10（点赞 + 2×转发 + 回复）；小众账号可在 `config/sources.json` 单独降低门槛或允许回复。刚发布但互动不足的内容可能延后到下一次抓取。
-
-> 主题过滤分两档：**分析师 / 决策者档**（`tier` 为 `analyst` / `exec`）只过滤节日祝福、生活动态这类社交噪音，不再要求推文命中 AI/技术关键词——这类账号的价值是判断，而判断是用大白话说的。**建造者档**（`builder`）继续走关键词门槛，他们发的本来就是产品公告，命中关键词零成本，同时也压住了这类账号的高发帖量。档位由 `judgment_tiers` 配置，也可给单个账号加 `"relevance_filter": true/false` 覆盖。
->
-> 引用推文（quote tweet）会连同被引用的原推一起抓取和判定：分析师常用「转发 + 一句短评」的方式发表看法，实质内容全在被引用的那条里，只读本人正文既会误判相关性，也会让日报里只剩一句「Yep」。
+> 主题过滤分两档：**分析师 / 决策者档**只过滤节日祝福、生活动态这类社交噪音；**建造者档**继续走关键词门槛。引用推文（quote tweet）会连同被引用的原推一起抓取和判定。
 
 ### 博客（4 家：3 家官方 + 1 家独立分析）
 
 | 来源 | 抓取方式 |
 |------|----------|
-| [Anthropic](https://www.anthropic.com/news) | 官方 sitemap（Anthropic 无 RSS）+ 文章页真实发布日期过滤 |
+| [Anthropic](https://www.anthropic.com/news) | 官方 sitemap + 文章页真实发布日期过滤 |
 | [OpenAI](https://openai.com/news/) | 官方 RSS |
 | [Google DeepMind](https://deepmind.google/blog/) | 官方 RSS |
-| [Stratechery](https://stratechery.com)（Ben Thompson） | 公开 RSS。免费周文给全文，付费的 Daily Update 只给一句话导语——日报按"他今天在谈什么 + 链接"呈现，不替他展开论点 |
+| [Stratechery](https://stratechery.com)（Ben Thompson） | 公开 RSS。付费的 Daily Update 只给一句话导语 |
 
-> 模型发布、产品上线、研究成果、安全框架，第一时间从官方渠道进日报，不等二手转述。Stratechery 是唯一的非官方源，日报里按"Ben Thompson 认为……"归属，不当作既定事实。每家每天最多 5 条，48 小时窗口。
+> 模型发布、产品上线、研究成果、安全框架，第一时间从官方渠道进日报，不等二手转述。Stratechery 是唯一的非官方源，日报里按"Ben Thompson 认为……"归属。每家每天最多 5 条，48 小时窗口。
 
 ### arXiv 论文（每日最多 30 篇）
 
@@ -128,50 +174,9 @@ SemiAnalysis 已进入日常自动全文流程：系统优先匹配官方 YouTub
 | cs.CL | 计算语言学（LLM / NLP 论文主阵地） |
 | cs.LG | 机器学习 |
 
-> 使用 5 天滚动窗口跨过周末和休刊时段，客户端按论文 ID 去重，不会重复推送。中央每天北京时间 06:00 做全量抓取，工作日约 09:30 再做一次 arXiv 专用刷新，以避开新论文批次尚未发布的空窗；09:30 前的早报可能仍使用上一批论文。
+> 使用 5 天滚动窗口跨过周末和休刊时段，客户端按论文 ID 去重。中央每天北京时间 06:00 做全量抓取，工作日约 09:30 再做一次 arXiv 专用刷新；09:30 前的早报可能仍使用上一批论文。
 
-## 快速开始
-
-打开你的 AI Agent（OpenClaw / Claude Code / Cursor / WorkBuddy / Codex 等），说一句话：
-
-> **帮我安装 https://github.com/Benboerba620/ai-signal**
-
-AI 会自动完成安装，然后引导你设置推送频率和时间、语言、详细程度和输出方式。设置完**立刻生成第一份日报**。
-
-不需要敲命令、不需要内容 API key。你需要一个能运行这个 skill 的 AI Agent。
-
-<details>
-<summary>手动安装（如果你的 Agent 不支持自动安装）</summary>
-
-```bash
-# OpenClaw
-git clone https://github.com/Benboerba620/ai-signal.git ~/skills/ai-signal
-cd ~/skills/ai-signal/scripts && pip install -r ../requirements.txt
-
-# Claude Code
-git clone https://github.com/Benboerba620/ai-signal.git ~/.claude/skills/ai-signal
-cd ~/.claude/skills/ai-signal/scripts && pip install -r ../requirements.txt
-
-# 其他
-git clone https://github.com/Benboerba620/ai-signal.git
-cd ai-signal/scripts && pip install -r ../requirements.txt
-```
-
-**国内网络 clone 失败？** 用镜像加速前缀（示例，失效就换一个同类服务）：
-
-```bash
-git clone https://gh-proxy.com/https://github.com/Benboerba620/ai-signal.git
-# 或
-git clone https://ghfast.top/https://github.com/Benboerba620/ai-signal.git
-```
-
-安装后的每日 feed 更新不依赖代理：GitHub 直连失败时自动切换 jsDelivr CDN 镜像。
-
-安装完成后告诉你的 Agent：**"set up ai signal"**
-
-</details>
-
-## 定制
+## 定制 / Configuration
 
 所有偏好都可以用对话修改：
 
@@ -184,57 +189,70 @@ git clone https://ghfast.top/https://github.com/Benboerba620/ai-signal.git
 
 ### 本地反馈
 
-看完日报后可以直接说“P2 有用”“X1 是噪音”“多看芯片”或“少看融资新闻”。Agent 会把反馈保存在本机 `~/.ai-signal/feedback.jsonl`，最近 90 天的反馈会作为下一份日报的软排序偏好，不上传到中央服务，也不会因为一次负面反馈永久屏蔽重大消息。
-
-用户要求展开某期播客时，会自动记录一次 `expanded`，用来观察哪些内容真正引发深读；展开只代表兴趣，不自动等同于“有用”。
+看完日报后可以直接说"P2 有用""X1 是噪音""多看芯片"或"少看融资新闻"。Agent 会把反馈保存在本机 `~/.ai-signal/feedback.jsonl`，最近 90 天的反馈会作为下一份日报的软排序偏好，不上传到中央服务。用户要求展开某期播客时，会自动记录一次 `expanded`，用来观察哪些内容真正引发深读。
 
 ### 自定义摘要风格
 
-编辑 `~/.ai-signal/prompts/` 下的文件：
+编辑 `~/.ai-signal/prompts/` 下的文件：`summarize-podcast.md`、`summarize-tweets.md`、`summarize-papers.md`、`digest-intro.md`。纯文本指令，改完下次推送生效。
 
-- `summarize-podcast.md` — 播客怎么总结
-- `summarize-tweets.md` — 推文怎么提炼
-- `summarize-papers.md` — 论文怎么摘要
-- `digest-intro.md` — 整体语气和格式
+## 维护者工具 / Repository maintenance
 
-纯文本指令，不是代码。改完下次推送生效。
+中央 feed 生成与包质量：
 
-## 工作原理
+```bash
+# 校验 skill 包是否符合规范
+python3 scripts/validate_skill.py .
 
-```mermaid
-flowchart LR
-  A["一线信息源<br/>X / 播客 / arXiv"] --> B["中央 GitHub Actions<br/>每天自动抓取"]
-  B --> C["公开 JSON feeds<br/>feed-x / feed-podcasts / feed-arxiv"]
-  C --> D["你的 AI Agent<br/>读取 JSON + 你的偏好"]
-  D --> E["生成个性化日报<br/>中文/英文、长/短、可继续追问"]
-  E --> F["聊天窗口 / Telegram / 飞书 / 邮件"]
+# 运行测试
+python3 -m unittest discover -s tests -p "test_*.py"
+
+# 生成中央 feed（需要 requirements-central.txt 依赖）
+python3 scripts/generate_feed.py
 ```
 
-简单说：中央只负责每天把 AI 一线原料抓好，用户自己的 Agent 负责筛选、翻译、总结和推送。这样不需要每个用户准备内容 API key，也不会把你的阅读偏好上传到中央服务。
+## 最近更新 / Recent updates
 
-**你不需要任何内容 API key。** 内容抓取在中央完成，摘要由你自己的 AI Agent 读取 JSON 后生成。
+- `2026-08-25`：兼容 X 登录页 16 位脚本哈希，修复 19 个账号被解析为空
+- `2026-08-21`：SemiAnalysis 自动匹配官方 YouTube 字幕；Latent Space 与 Lenny 切换 podcast-only RSS
+- `2026-08-19`：新增 Ben Thompson（Stratechery）四通道
+- `2026-08-18`：接入 Y Combinator Startup Podcast 当前 RSS
+- `2026-08-05`：X 主题过滤按账号性质分档；X 信源换血——追黄仁勋本人、新增买方视角 @GavinSBaker
 
-默认是 **JSON-first**：中央只提供原始 feed，不生成中文版日报。这能减少中文、emoji、长播客字幕在命令行、定时任务和推送链路里的编码问题。中央 LLM 摘要能力仍保留为手动调试选项，但不是默认用户路径。
+完整历史见 [CHANGELOG](CHANGELOG.md)。
 
-## 要求
+## Troubleshooting / 故障排查
 
-- 一个 AI Agent（OpenClaw、Claude Code、Cursor、WorkBuddy、Codex 等均可）
-- 网络连接（拉取中央 feed；不需要 VPN——GitHub 不可达时自动走 jsDelivr CDN 镜像）
+| 症状 | 原因 | 修法 |
+|------|------|------|
+| 国内 clone 失败 / feed 拉不到 | GitHub 被阻断 | 用镜像前缀 clone（见安装节）；feed 更新会自动切 jsDelivr CDN 镜像 |
+| 生成日报时报错缺 `httpx` | 用户侧依赖未装 | `cd ~/.ai-signal/runtime/ai-signal/scripts && pip install -r ../requirements.txt` |
+| 日报里的时间不对 | 时区未识别 | 依赖 `tzdata`，在 Agent 里说"用我的时区"或按配置说明切换 |
+| 播客不可展开 | 该期无公开字幕（或字幕已超 14 天过期） | 日报中只保留标题与链接；新节目通常次日补上字幕 |
+| 中央摘要（中文版）不可用 | 已是 JSON-first 默认路径 | 中央摘要仅为维护者调试选项，除非配置显式 `include_central_summaries: true` |
+| 定时任务中途被杀 | 任务限时太短 | 给任务 `--timeout-seconds 900`（≥10 分钟） |
 
-就这些。不需要内容 API key。所有内容由中央统一抓取，每天自动更新。若要无人值守地每天自动收到，需要使用支持定时任务的 Agent；普通非持久 Agent 更适合手动输入 `/ai-signal` 查看。
+## 设计哲学 / Design philosophy
 
-## 隐私
+- **Agent-first**：中央只供料（JSON feed），不替用户生成最终日报。这样每个用户不需要内容 API key，阅读偏好也留在自己机器上。
+- **过滤而非聚合**：筛人的标准是"在一线做事 / 有独立判断 / 真金白银下注"，不是粉丝量；这是这份清单的核心产品决策。
+- **判断用大白话，公告看关键词**：分析师/决策者的价值是判断，不要求命中 AI 关键词；建造者发的是产品公告，关键词零成本。
+- **隐私默认**：不采集任何用户数据，配置和偏好只存在 `~/.ai-signal/`，只聚合公开内容。
+- **JSON-first**：中央不生成中文日报，减少中文、emoji、长字幕在命令行、定时任务和推送链路里的编码问题。
 
-- 不采集任何用户数据
-- 你的配置和偏好只存在你自己的机器上（`~/.ai-signal/`）
-- 只聚合公开内容（公开推文、公开播客、公开论文）
+## 致谢 / Credits and sources
 
-## 关于
+- 原始作者：**奔波儿r**（[Benboerba620](https://github.com/Benboerba620)）——这份清单来自一位二级市场研究员的日常信息源
+- 信息源：见 [信息源](#信息源--information-sources) 一节，全部为公开内容
+- 包规范：按 [fastagent-meta-skill](https://github.com/tokenaissance/fastagent-meta-skill) 的发布流程重新封装
 
-这份清单来自一个二级市场研究员的日常信息源。筛选标准只有一个：**这个人说的话，值不值得我每天花时间看。**
+## 安全与证据边界 / Security and evidence boundary
 
-公众号「奔波儿r」· [GitHub](https://github.com/Benboerba620)
+- **不采集任何用户数据**。你的配置和偏好只存在你自己的机器上（`~/.ai-signal/`）。
+- **只聚合公开内容**：公开推文、公开播客、公开论文、官方博客。
+- **无内容 API key**：所有内容由中央统一抓取；只有选择 Telegram / 飞书 / 邮件推送时才需要你自己的 delivery API key，且它们只存在本机配置。
+- **反馈不上传**：`feedback.jsonl` 的软排序偏好只影响你自己的日报。
+- **证据边界**：feed 新鲜度、字幕 retention、账号覆盖等行为有测试覆盖（`tests/`）；日报质量由用户自己的 Agent 生成，属于用户侧行为，不在此包的证据范围内。
 
 ## License
 
-MIT
+MIT © 2026 Tokenaissance。原始版权归 [Benboerba620](https://github.com/Benboerba620) 所有。

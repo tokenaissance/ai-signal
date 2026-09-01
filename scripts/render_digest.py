@@ -8,6 +8,8 @@ Usage:
     python scripts/prepare_digest.py | python scripts/render_digest.py
 """
 
+SCRIPT_INTERFACE = "internal-module"
+
 import json
 import re
 import sys

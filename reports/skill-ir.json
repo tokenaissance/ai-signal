@@ -1,0 +1,172 @@
+{
+  "schema_version": "2.0.0-fastagent-lite",
+  "generated_at": "2026-09-01",
+  "package": {
+    "name": "ai-signal",
+    "version": "1.0.0",
+    "owner": "Tokenaissance",
+    "maturity_tier": "library",
+    "lifecycle_stage": "maintained",
+    "upstream_inspiration": "https://github.com/Benboerba620/ai-signal",
+    "upstream_sync": {
+      "policy": "maintained fork of Benboerba620/ai-signal; align package metadata, keep runtime and feed updates in sync"
+    }
+  },
+  "intent": {
+    "description": "AI Signal daily digest for Agent users — tracks top AI builders on X, podcasts, official AI-lab blogs (Anthropic / OpenAI / DeepMind), and arXiv papers, then remixes central JSON feeds into a personalized digest. Use when the user wants AI/investing insights or invokes /ai-signal. No content API keys required.",
+    "job_to_be_done": "AI Signal daily digest for Agent users — tracks top AI builders on X, podcasts, official AI-lab blogs (Anthropic / OpenAI / DeepMind), and arXiv papers, then remixes central JSON feeds into a personalized digest. Use when the user wants AI/investing insights or invokes /ai-signal. No content API keys required.",
+    "target_users": [
+      "fastagent operator"
+    ],
+    "inputs": [],
+    "outputs": [],
+    "exclusions": [],
+    "defaults": {
+      "skill_name_prefix": "ai-signal",
+      "max_preferred_hyphen_parts": 2,
+      "copyright": "Copyright (c) 2026 Tokenaissance",
+      "attribution": "Original by Benboerba620 (公众号「奔波儿r」)"
+    }
+  },
+  "triggers": {
+    "should_trigger": [
+      "帮我安装 ai-signal 并生成今天的日报",
+      "生成今天的 AI 信号日报",
+      "展开第 2 个播客",
+      "把今天的信息源推送到 Telegram",
+      "总结今天的 arXiv 论文",
+      "AI 信号今天有什么新论文",
+      "Generate today's AI digest",
+      "Expand podcast P2 transcript",
+      "Push today's signal to Telegram",
+      "把日报切换成英文"
+    ],
+    "should_not_trigger": [
+      "把这篇文章翻译一下",
+      "帮我写个产品标题",
+      "解释一下什么是 AI 信号",
+      "Summarize this random note in three bullets",
+      "本周投资周报帮我总结一下",
+      "brainstorm 几个产品点子",
+      "把这个 Python 脚本打包发布到 PyPI"
+    ],
+    "near_neighbor": [
+      "只展开播客字幕，不要生成日报",
+      "阅读一篇博客文章，不要做成日报",
+      "只把这个播客的新闻稿转给我，不用总结",
+      "把这期播客的标题列出来就行，不要生成日报"
+    ]
+  },
+  "workflow": {
+    "router_rules": [],
+    "compact_workflow": [],
+    "gate_ladder": [],
+    "output_contract": []
+  },
+  "resources": {
+    "references": [
+      "references/auto-install-zero-command-line.md",
+      "references/configuration-handling.md",
+      "references/content-delivery-digest-run.md",
+      "references/content-sources.md",
+      "references/detecting-platform.md",
+      "references/first-run-onboarding.md",
+      "references/manual-trigger.md"
+    ],
+    "scripts": [
+      "scripts/deliver.py",
+      "scripts/feedback.py",
+      "scripts/fetch_transcript.py",
+      "scripts/generate_feed.py",
+      "scripts/generate_summaries.py",
+      "scripts/mark_delivered.py",
+      "scripts/podcast_transcripts.py",
+      "scripts/prepare_digest.py",
+      "scripts/render_digest.py",
+      "scripts/transcribe_missing_podcasts.py",
+      "scripts/validate_feeds.py"
+    ],
+    "evals": [
+      "evals/trigger_cases.json"
+    ],
+    "reports": [
+      "reports/creation-handoff.md",
+      "reports/prior-art-research.md",
+      "reports/trigger-eval.json"
+    ]
+  },
+  "portability": {
+    "canonical_format": "agent-skills",
+    "adapter_targets": [
+      "fastagent",
+      "openai",
+      "claude",
+      "generic",
+      "agent-skills-compatible",
+      "vscode"
+    ],
+    "activation": {
+      "mode": "manual",
+      "paths": [
+        "/ai-signal"
+      ]
+    },
+    "execution": {
+      "context": "inline",
+      "shell": "bash"
+    },
+    "trust": {
+      "source_tier": "remote",
+      "remote_inline_execution": "forbid",
+      "remote_metadata_policy": "allow feed and source metadata; forbid unreviewed execution",
+      "generated_public_claims": "evidence-bound"
+    },
+    "permissions": {
+      "network": "fetch central JSON feeds from GitHub and jsDelivr CDN mirrors only; delivery to Telegram / Feishu / email only when the user supplies delivery credentials and asks for it",
+      "file_write": "user configuration under ~/.ai-signal/ and its prompts/, feedback.jsonl; never replace user config while refreshing the runtime checkout",
+      "subprocess": "python3 for the bundled scripts (prepare_digest.py, deliver.py, feedback.py, render_digest.py) and transcription backends; no arbitrary code execution",
+      "interactive": "avoid unless delivery platform auth requires it"
+    },
+    "degradation": {
+      "fastagent": "canonical-source",
+      "openai": "metadata-adapter",
+      "claude": "neutral-source-plus-adapter",
+      "generic": "neutral-source",
+      "agent-skills-compatible": "canonical-source",
+      "vscode": "neutral-source-plus-review-notes"
+    }
+  },
+  "gates": {
+    "scaffold": [
+      "SKILL.md frontmatter with name and description",
+      "README hook and natural trigger examples",
+      "clear exclusions (one-off summaries are not digests)"
+    ],
+    "production": [
+      "agents/interface.yaml",
+      "evals/trigger_cases.json",
+      "manifest.json with semver version",
+      "install and README verification (npx skills add and git clone paths)",
+      "root-only discoverable SKILL.md entrypoint",
+      "no content API keys required from users"
+    ],
+    "library": [
+      "reports/skill-ir.json",
+      "reports/trigger-eval.json",
+      "portability notes across Agent platforms",
+      "trust boundary (central service fetches; user agent digests; feedback stays local)"
+    ],
+    "governed": [
+      "secret scan (no delivery credentials committed)",
+      "rollback boundary (runtime checkout refresh never replaces ~/.ai-signal/ config)",
+      "public claim guard (feed freshness and coverage claims match tests)",
+      "README, MIT LICENSE, and install evidence verified"
+    ]
+  },
+  "evidence_boundary": {
+    "generated_reports_are_evidence": true,
+    "planned_work_is_evidence": false,
+    "missing_external_or_human_evidence_label": "missing evidence",
+    "public_claim_policy": "claim only what local validation, install proof, human review, or provider-backed evidence actually supports"
+  }
+}
