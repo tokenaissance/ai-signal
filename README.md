@@ -83,8 +83,8 @@ AI 会自动完成安装，然后引导你设置推送频率和时间、语言�
 <summary>手动安装（如果你的 Agent 不支持自动安装）</summary>
 
 ```bash
-# 方式一：npx skills 安装器（最干净）
-npx skills add Benboerba620/ai-signal --skill ai-signal
+# 方式一：npx skills 安装器（最干净，装 v1.0.0 发布包）
+npx skills add tokenaissance/ai-signal
 
 # 方式二：git clone（OpenClaw / Claude Code / 其他）
 git clone https://github.com/Benboerba620/ai-signal.git ~/skills/ai-signal
@@ -102,6 +102,22 @@ git clone https://ghfast.top/https://github.com/Benboerba620/ai-signal.git
 安装后的每日 feed 更新不依赖代理：GitHub 直连失败时自动切换 jsDelivr CDN 镜像。
 
 </details>
+
+### 装到 FastAgent
+
+FastAgent 的 SkillsLoader **不扫描** `~/.agents/skills/`（`npx skills add` 默认落地位置）。正确装法（user 层，指南见 `skills/fastagent-skill-guide`）：
+
+```bash
+# 方式一：直接放 user 层，fastagent skill list 立即可见
+git clone --depth 1 https://github.com/tokenaissance/ai-signal.git ~/.fastagent/skills/ai-signal
+# 或从已装好的 canonical 副本复制：
+# cp -R ~/.agents/skills/ai-signal ~/.fastagent/skills/ai-signal
+
+# 方式二：fastagent 聊天中由 agent 安装（npx 落到 per-user 桶 ~/.fastagent/users/<uid>/skills/）
+npx skills add -g -y tokenaissance/ai-signal
+```
+
+> ClawHub registry 目前没有 ai-signal（`fastagent skill search ai-signal` → 404），`fastagent skill install` 暂不可用；发布后可直接 `fastagent skill install ai-signal`。
 
 ## 前置条件 / Prerequisites
 

@@ -1,6 +1,12 @@
 ---
 name: ai-signal
 description: AI Signal daily digest for Agent users — tracks top AI builders on X, podcasts, official AI-lab blogs (Anthropic / OpenAI / DeepMind), and arXiv papers, then remixes central JSON feeds into a personalized digest. Use when the user wants AI/investing insights or invokes /ai-signal. No content API keys required.
+homepage: https://github.com/tokenaissance/ai-signal
+metadata:
+  fastagent:
+    emoji: "📡"
+    requires:
+      anyBins: ["python3", "python"]
 ---
 # AI Signal — 追踪 AI 一线的声音
 
@@ -30,6 +36,20 @@ config explicitly sets `include_central_summaries: true`.
 Before any workflow, locate a complete AI Signal checkout. A complete checkout
 contains both `scripts/prepare_digest.py` and `references/` next to this file.
 
+The cleanest install is the skills.sh package installer (installs the full
+repo under `~/.agents/skills/ai-signal/`):
+
+```bash
+npx skills add tokenaissance/ai-signal
+```
+
+On FastAgent the loader does NOT scan `~/.agents/skills/`; install to the user
+layer instead, then verify with `fastagent skill list` (source=user):
+
+```bash
+git clone --depth 1 https://github.com/tokenaissance/ai-signal.git ~/.fastagent/skills/ai-signal
+```
+
 If those support files are present, use this skill directory directly. Some
 single-file installers copy only `SKILL.md`; in that case, install the runtime
 checkout automatically:
@@ -45,6 +65,9 @@ instead of cloning again. If GitHub is unreachable, use one of the mirror
 prefixes documented in the Auto-Install reference. Treat the complete checkout
 as `SKILL_DIR` for every referenced command. Keep user configuration in
 `~/.ai-signal/`; never replace it while refreshing the runtime checkout.
+
+Under FastAgent the loader substitutes `{baseDir}` with the skill directory at
+load time — it is the same location as `SKILL_DIR` here.
 
 ## Workflow References
 
