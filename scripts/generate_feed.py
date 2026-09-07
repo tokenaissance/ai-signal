@@ -549,11 +549,27 @@ async def fetch_twitter(sources):
         try:
             import twscrape.xclid as _xclid
             from twscrape.http import make_client as _mc
-            _xclid._make_client = lambda cookies=None: _mc(
-                proxy=proxy,
-                headers={"user-agent": "@chrome"},
-                cookies=cookies,
-            )
+
+            def _make_client_via_proxy(proxy=None, cookies=None, **kwargs):
+                """强制让 xclid 的签名请求走我们探测到的代理。
+
+                签名必须跟上 twscrape 的契约（2026-09-06 修）：0.19.2 起 xclid 会把
+                **账号 cookie 连同 proxy** 一路传进来（`_make_client(proxy=..., cookies=...)`）。
+                这里原来是 `lambda cookies=None:`，收到 proxy 关键字就
+                `TypeError: got an unexpected keyword argument 'proxy'`，
+                x-client-transaction-id 生成不出来 → 每个账号都报
+                "No account available"，看起来像 cookie 失效，其实是签名挂了。
+                云端一直没暴露是因为它 proxy=False 走不到这个分支。
+
+                收下 proxy 但忽略它 —— 这个函数存在的意义就是强制换出口。
+                cookies 必须原样透传：X 对登录态和匿名态发的是不同的前端构建，
+                只有登录态那份可靠含有签名 indices。
+                """
+                return _mc(proxy=forced_proxy, cookies=cookies,
+                           headers={"user-agent": "@chrome"}, **kwargs)
+
+            forced_proxy = proxy
+            _xclid._make_client = _make_client_via_proxy
         except Exception:
             pass
 
@@ -1931,6 +1947,13 @@ async def main():
     parser.add_argument("--blogs-only", action="store_true")
     parser.add_argument("--people-only", action="store_true",
                         help="refresh person-appearance searches only; keep channel episodes as-is")
+    # X 对 GitHub Actions 的机房 IP 段返回 403（2026-09-06 对照实验确认：同一份
+    # 全新 cookie，住宅 IP 能抓 20 条，云端连跑两次都是 403，变量只剩出口 IP）。
+    # 云端定时班因此永久跳过 X，改由住宅 IP 上的机器跑 `--twitter-only` 后
+    # 单独提交 feed-x.json。留着让云端每晚白撞一次没有好处：拿不到数据，
+    # 还让那个账号每天从机房 IP 吃一次 403。
+    parser.add_argument("--skip-twitter", action="store_true",
+                        help="run every source except Twitter/X (X blocks datacenter IPs)")
     args = parser.parse_args()
 
     sources = load_sources()
@@ -1940,7 +1963,7 @@ async def main():
     run_all = not (args.twitter_only or args.podcasts_only or args.arxiv_only
                    or args.blogs_only or args.people_only)
 
-    if run_all or args.twitter_only:
+    if (run_all and not args.skip_twitter) or args.twitter_only:
         log("\n━━━ Twitter/X ━━━")
         # X 是四个源里唯一会被对方主动拒绝的（403 / 锁号 / 封 IP），而且它的拒绝
         # 方式历史上是"卡住"不是"报错"。所以这里两道闸（2026-09-06 加）：
